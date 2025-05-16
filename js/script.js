@@ -92,3 +92,45 @@ document.getElementById('searchBar').addEventListener('input', (e) => {
   addMarkers(filtered);
   updateList(filtered);
 });
+
+
+window.addEventListener('DOMContentLoaded', () => {
+  const userInfoDiv = document.getElementById('user-info');
+  const connectedUser = JSON.parse(localStorage.getItem('connectedUser'));
+
+  if (connectedUser && connectedUser.username) {
+    userInfoDiv.textContent = `Bienvenue, ${connectedUser.username} !`;
+    // Optionnel : cacher le bouton connexion
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) loginBtn.style.display = 'none';
+  } else {
+    userInfoDiv.textContent = '';
+  }
+});
+
+
+window.addEventListener('DOMContentLoaded', () => {
+  const userInfoSpan = document.getElementById('user-info');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const loginBtn = document.getElementById('loginBtn');
+
+  const connectedUser = JSON.parse(localStorage.getItem('connectedUser'));
+
+  if (connectedUser && connectedUser.username) {
+    userInfoSpan.textContent = `Bienvenue, ${connectedUser.username} !`;
+    if (loginBtn) loginBtn.style.display = 'none';
+    logoutBtn.style.display = 'inline-block';
+
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('connectedUser');
+      logoutBtn.style.display = 'none';
+      userInfoSpan.textContent = '';
+      if (loginBtn) loginBtn.style.display = 'inline-block';
+    });
+  } else {
+    userInfoSpan.textContent = '';
+    logoutBtn.style.display = 'none';
+  }
+});
+
+

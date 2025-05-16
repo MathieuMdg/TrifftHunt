@@ -2,11 +2,11 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TriftHunt – Login / Signup</title>
   <style>
     body {
-        color:black;
+      color: black;
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
       display: flex;
@@ -15,7 +15,6 @@
       height: 100vh;
       margin: 0;
     }
-
     .container {
       background-color: white;
       padding: 2rem;
@@ -24,28 +23,23 @@
       width: 100%;
       max-width: 400px;
     }
-
     h2 {
       text-align: center;
       margin-bottom: 1.5rem;
     }
-
     .form-group {
       margin-bottom: 1rem;
     }
-
     label {
       display: block;
       margin-bottom: 0.5rem;
     }
-
     input {
       width: 100%;
       padding: 0.75rem;
       border: 1px solid #ccc;
       border-radius: 0.5rem;
     }
-
     button {
       width: 100%;
       padding: 0.75rem;
@@ -56,80 +50,105 @@
       cursor: pointer;
       font-weight: bold;
     }
-
     button:hover {
       background-color: #333;
     }
-
     .toggle {
       text-align: center;
       margin-top: 1rem;
     }
-
     .toggle a {
       color: #007bff;
       cursor: pointer;
       text-decoration: underline;
     }
-
     #username-group {
       display: none;
     }
-  </style><script>
-  let isSignup = false;
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="form-title">Connexion</h2>
+    <form id="auth-form">
+      <div class="form-group" id="username-group">
+        <label for="username">Nom d’utilisateur</label>
+        <input type="text" id="username" />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" required />
+      </div>
+      <button type="submit" id="submit-btn">Se connecter</button>
+    </form>
+    <div class="toggle">
+      <span id="toggle-text">Pas encore de compte ? </span><a id="toggle-link">Inscription</a>
+    </div>
+  </div>
 
-  const formTitle = document.getElementById("form-title");
-  const usernameGroup = document.getElementById("username-group");
-  const toggleText = document.getElementById("toggle-text");
-  const toggleLink = document.getElementById("toggle-link");
-  const submitBtn = document.getElementById("submit-btn");
-  const form = document.getElementById("auth-form");
+  <script>
+    let isSignup = false;
 
-  toggleLink.addEventListener("click", () => {
-    isSignup = !isSignup;
-    formTitle.textContent = isSignup ? "Inscription" : "Connexion";
-    submitBtn.textContent = isSignup ? "S'inscrire" : "Se connecter";
-    toggleText.textContent = isSignup ? "Déjà un compte ?" : "Pas encore de compte ?";
-    toggleLink.textContent = isSignup ? "Connexion" : "Inscription";
-    usernameGroup.style.display = isSignup ? "block" : "none";
-  });
+    const formTitle = document.getElementById("form-title");
+    const usernameGroup = document.getElementById("username-group");
+    const toggleText = document.getElementById("toggle-text");
+    const toggleLink = document.getElementById("toggle-link");
+    const submitBtn = document.getElementById("submit-btn");
+    const form = document.getElementById("auth-form");
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
+    toggleLink.addEventListener("click", () => {
+      isSignup = !isSignup;
+      formTitle.textContent = isSignup ? "Inscription" : "Connexion";
+      submitBtn.textContent = isSignup ? "S'inscrire" : "Se connecter";
+      toggleText.textContent = isSignup ? "Déjà un compte ? " : "Pas encore de compte ? ";
+      toggleLink.textContent = isSignup ? "Connexion" : "Inscription";
+      usernameGroup.style.display = isSignup ? "block" : "none";
+    });
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const username = document.getElementById("username").value;
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-    // Récupérer tous les users enregistrés (JSON ou objet vide si aucun)
-    const users = JSON.parse(localStorage.getItem("users")) || {};
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const username = document.getElementById("username").value;
 
-    if (isSignup) {
-      if (users[email]) {
-        alert("❌ Cet email est déjà utilisé.");
-        return;
+      const users = JSON.parse(localStorage.getItem("users")) || {};
+
+      if (isSignup) {
+        if (users[email]) {
+          alert("❌ Cet email est déjà utilisé.");
+          return;
+        }
+        users[email] = {
+          username: username,
+          password: password,
+        };
+        localStorage.setItem("users", JSON.stringify(users));
+        alert("✅ Compte créé avec succès ! Vous pouvez maintenant vous connecter.");
+        toggleLink.click(); // repasser en mode connexion
+      } else {
+        const user = users[email];
+        if (!user || user.password !== password) {
+          alert("❌ Email ou mot de passe incorrect.");
+          return;
+        }
+        alert(`✅ Bienvenue, ${user.username} !`);
+        // Après authentification réussie (connexion)
+          localStorage.setItem('connectedUser', JSON.stringify({
+          email: email,
+          username: user.username
+        }));
+
+        // Puis redirection vers la carte
+        window.location.href = 'carte.html';
       }
 
-      // Stocke le nouvel utilisateur
-      users[email] = {
-        username: username,
-        password: password,
-      };
-      localStorage.setItem("users", JSON.stringify(users));
-      alert("✅ Compte créé avec succès ! Vous pouvez maintenant vous connecter.");
-      toggleLink.click(); // On repasse en mode login
-    } else {
-      const user = users[email];
-      if (!user || user.password !== password) {
-        alert("❌ Email ou mot de passe incorrect.");
-        return;
-      }
-      alert(`✅ Bienvenue, ${user.username} !`);
-    }
-
-    form.reset();
-  });
-</script>
-
+      form.reset();
+    });
+  </script>
 </body>
 </html>

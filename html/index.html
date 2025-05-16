@@ -2,32 +2,32 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Friperies à Paris</title>
+  <title>Connexion</title>
 
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
-  <div id="container">
-    <div id="map"></div>
+  <form id="loginForm">
+    <h2>Connexion</h2>
+    <input type="text" id="username" placeholder="Nom d’utilisateur" required />
+    <input type="password" id="password" placeholder="Mot de passe" required />
+    <button type="submit">Se connecter</button>
+    <div class="error" id="errorMsg"></div>
+  </form>
 
-    <div id="sidebar">
-      <input
-        type="text"
-        id="searchBar"
-        placeholder="Rechercher une friperie..."
-        autocomplete="off"
-      />
-      <ul id="friperieList"></ul>
-    </div>
-  </div>
+  <script>
+    const form = document.getElementById('loginForm');
+    const errorMsg = document.getElementById('errorMsg');
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="../js/friperies.js"></script> <!-- tes données friperies -->
-  <script src="../js/script.js"></script>
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+  
+        window.location.href = 'carte.html';
+
+    });
+  </script>
 </body>
 </html>

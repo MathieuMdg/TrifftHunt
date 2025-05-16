@@ -1,10 +1,33 @@
-/* Container en flex pour côte-à-côte */
-#container {
+#logoutBtn {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background-color: #8e44ad;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10000;
+
   display: flex;
-  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Pour que la carte et sidebar ne soient pas cachés derrière le bouton */
+#container {
+  margin-top: 50px; /* hauteur du bouton */
+  display: flex;
+  height: calc(100vh - 50px);
   width: 100vw;
   font-family: Arial, sans-serif;
 }
+
 
 /* Carte à gauche */
 #map {
@@ -68,3 +91,24 @@
   box-shadow: 0 0 3px rgba(0,0,0,0.3);
   pointer-events: none;
 }
+
+/* Bouton connexion en haut à droite */
+    #loginBtn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background-color: #8e44ad;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      z-index: 10000;
+      font-weight: bold;
+      font-size: 14px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease;
+    }
+    #loginBtn:hover {
+      background-color: #732d91;
+    }

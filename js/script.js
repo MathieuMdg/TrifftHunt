@@ -172,3 +172,12 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+
+if (connectedUser) {
+  loginBtn.style.display = 'none';
+  logoutBtn.style.display = 'inline-block';
+} else {
+  loginBtn.style.display = 'inline-block';
+  logoutBtn.style.display = 'none';
+}
+

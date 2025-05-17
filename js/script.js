@@ -15,7 +15,31 @@ const violetIcon = L.icon({
 });
 
 let markers = [];
+let friperieActive = null;
 
+// === GESTION UTILISATEUR ET SESSION ===
+function mettreAJourInterfaceUtilisateur() {
+  const userInfo = document.getElementById('user-info');
+  const loginBtn = document.getElementById('loginBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const avisSection = document.getElementById('avisSection');
+
+  const connectedUser = JSON.parse(localStorage.getItem('connectedUser'));
+
+  if (connectedUser && connectedUser.username) {
+    userInfo.textContent = `Bienvenue, ${connectedUser.username} !`;
+    loginBtn.style.display = 'none';
+    logoutBtn.style.display = 'inline-block';
+    if (avisSection) avisSection.style.display = 'block';
+  } else {
+    userInfo.textContent = '';
+    loginBtn.style.display = 'inline-block';
+    logoutBtn.style.display = 'none';
+    if (avisSection) avisSection.style.display = 'none';
+  }
+}
+
+// === AFFICHAGE DES MARQUEURS SUR LA CARTE ===
 function addMarkers(filteredFriperies) {
   markers.forEach(m => map.removeLayer(m));
   markers = [];
@@ -41,14 +65,16 @@ function addMarkers(filteredFriperies) {
 
     marker.on('click', () => {
       map.flyTo([f.latitude, f.longitude], 16);
+      marker.openPopup();
+      friperieActive = f.nom;
+      afficherAvis(friperieActive);
     });
 
     markers.push(marker);
   });
 }
 
-
-
+// === LISTE À DROITE ===
 function updateList(filteredFriperies) {
   const list = document.getElementById('friperieList');
   list.innerHTML = '';
@@ -60,7 +86,7 @@ function updateList(filteredFriperies) {
         <img src="${f.image}" alt="${f.nom}" style="width:60px; height:auto; border-radius:6px; flex-shrink:0;" />
         <div>
           <strong>${f.nom}</strong><br />
-          <small style="color:gray;">${f.adresse ? f.adresse : ''}</small><br />
+          <small style="color:gray;">${f.adresse || ''}</small><br />
           <p style="margin:4px 0; font-size: 14px; color:#333;">${f.description}</p>
         </div>
       </div>
@@ -69,12 +95,14 @@ function updateList(filteredFriperies) {
     li.addEventListener('click', () => {
       map.setView([f.latitude, f.longitude], 16);
       markers[i].openPopup();
+      friperieActive = f.nom;
+      afficherAvis(friperieActive);
     });
     list.appendChild(li);
   });
 }
 
-
+// === RECHERCHE ===
 function filterFriperies(query) {
   const filtre = query.toLowerCase();
   return friperies.filter(f =>
@@ -82,55 +110,65 @@ function filterFriperies(query) {
   );
 }
 
-// Initial affichage de toutes les friperies
-addMarkers(friperies);
-updateList(friperies);
-
-// Écoute sur la barre de recherche
-document.getElementById('searchBar').addEventListener('input', (e) => {
-  const filtered = filterFriperies(e.target.value);
-  addMarkers(filtered);
-  updateList(filtered);
-});
-
-
-window.addEventListener('DOMContentLoaded', () => {
-  const userInfoDiv = document.getElementById('user-info');
+// === AFFICHAGE DES AVIS ===
+function afficherAvis(nomFriperie) {
+  const avisList = document.getElementById('avisList');
+  const avisForm = document.getElementById('avisForm');
+  const avisTitle = document.getElementById('avisTitle');
   const connectedUser = JSON.parse(localStorage.getItem('connectedUser'));
 
-  if (connectedUser && connectedUser.username) {
-    userInfoDiv.textContent = `Bienvenue, ${connectedUser.username} !`;
-    // Optionnel : cacher le bouton connexion
-    const loginBtn = document.getElementById('loginBtn');
-    if (loginBtn) loginBtn.style.display = 'none';
-  } else {
-    userInfoDiv.textContent = '';
-  }
-});
+  avisTitle.textContent = `Avis pour "${nomFriperie}"`;
 
+  const allAvis = JSON.parse(localStorage.getItem('avisFriperies')) || {};
+  const avisFriperie = allAvis[nomFriperie] || [];
 
-window.addEventListener('DOMContentLoaded', () => {
-  const userInfoSpan = document.getElementById('user-info');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const loginBtn = document.getElementById('loginBtn');
+  avisList.innerHTML = avisFriperie.length
+    ? avisFriperie.map(a => `<div class="avis"><strong>${a.user}</strong> : ${a.message}</div>`).join('')
+    : "<p>Pas encore d'avis pour cette friperie.</p>";
 
+  avisForm.style.display = connectedUser ? 'block' : 'none';
+}
+
+// === ENVOI AVIS ===
+document.getElementById('envoyerAvisBtn')?.addEventListener('click', () => {
+  const textarea = document.getElementById('avisTexte');
+  const message = textarea.value.trim();
   const connectedUser = JSON.parse(localStorage.getItem('connectedUser'));
 
-  if (connectedUser && connectedUser.username) {
-    userInfoSpan.textContent = `Bienvenue, ${connectedUser.username} !`;
-    if (loginBtn) loginBtn.style.display = 'none';
-    logoutBtn.style.display = 'inline-block';
+  if (!message || !friperieActive || !connectedUser) return;
 
-    logoutBtn.addEventListener('click', () => {
-      localStorage.removeItem('connectedUser');
-      logoutBtn.style.display = 'none';
-      userInfoSpan.textContent = '';
-      if (loginBtn) loginBtn.style.display = 'inline-block';
-    });
-  } else {
-    userInfoSpan.textContent = '';
-    logoutBtn.style.display = 'none';
-  }
+  const allAvis = JSON.parse(localStorage.getItem('avisFriperies')) || {};
+  if (!allAvis[friperieActive]) allAvis[friperieActive] = [];
+
+  allAvis[friperieActive].push({
+    user: connectedUser.username,
+    message
+  });
+
+  localStorage.setItem('avisFriperies', JSON.stringify(allAvis));
+  textarea.value = '';
+  afficherAvis(friperieActive);
 });
 
+// === DOM PRÊT ===
+window.addEventListener('DOMContentLoaded', () => {
+  mettreAJourInterfaceUtilisateur();
+  addMarkers(friperies);
+  updateList(friperies);
+
+  document.getElementById('searchBar')?.addEventListener('input', (e) => {
+    const filtered = filterFriperies(e.target.value);
+    addMarkers(filtered);
+    updateList(filtered);
+  });
+
+  document.getElementById('loginBtn')?.addEventListener('click', () => {
+    window.location.href = 'auth.html';
+  });
+
+  document.getElementById('logoutBtn')?.addEventListener('click', () => {
+    localStorage.removeItem('connectedUser');
+    location.reload();
+  });
+});
 

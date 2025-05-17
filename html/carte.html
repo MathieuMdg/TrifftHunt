@@ -3,29 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TrifftHunt - </title>
+  <title>TrifftHunt - Map</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="../css/carte.css" />
-
 </head>
 <body>
-
-    <div id="user-info" style="position: fixed; top: 10px; right: 120px; color: #8e44ad; font-weight: bold; z-index: 10000;"></div>
-
-  <button id="loginBtn">Se connecter</button>
-
-  <div style="position: fixed; top: 10px; right: 120px; z-index: 10000; display: flex; align-items: center; gap: 10px; font-weight: bold; color: #8e44ad;">
-  <span id="user-info"></span>
-  <button id="logoutBtn" style="padding: 5px 10px; cursor: pointer;">Déconnexion</button>
-</div>
-
+  <!-- ✅ Déplace le header ici, à l’intérieur du <body> -->
+  <header id="navbar">
+    <div class="nav-left">
+      <h1>TriftHunt</h1>
+    </div>
+    <div class="nav-right">
+      <span id="user-info"></span>
+      <button id="loginBtn">Se connecter</button>
+      <button id="logoutBtn">Déconnexion</button>
+    </div>
+  </header>
 
   <div id="container">
     <div id="map"></div>
     <div id="sidebar">
       <input type="text" id="searchBar" placeholder="Rechercher une friperie..." autocomplete="off" />
       <ul id="friperieList"></ul>
+
+      <div id="avisContainer">
+        <h2 id="avisTitle" style="margin-bottom: 10px;">Avis</h2>
+        <div id="avisList"></div>
+
+        <!-- Formulaire visible seulement si connecté -->
+        <div id="avisForm" style="display: none; margin-top: 20px;">
+          <textarea id="avisTexte" placeholder="Écris ton avis ici..." rows="3"></textarea><br />
+          <button id="envoyerAvisBtn">Envoyer</button>
+        </div>
+      </div>
+
     </div>
   </div>
 

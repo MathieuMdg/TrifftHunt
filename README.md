@@ -1,1 +1,1 @@
-# TrifftHunt
+# TriftHunt

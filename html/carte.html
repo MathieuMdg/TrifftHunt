@@ -9,13 +9,13 @@
   <link rel="stylesheet" href="../css/carte.css" />
 </head>
 <body>
-  <!-- ✅ Déplace le header ici, à l’intérieur du <body> -->
+
+  <!-- 🧭 Barre de navigation -->
   <header id="navbar">
     <div class="nav-left">
       <h1 class="site-title">
-    <a href="index.html" style="color: inherit; text-decoration: none;">TriftHunt</a>
-  </h1>
-
+        <a href="index.html" style="color: inherit; text-decoration: none;">TriftHunt</a>
+      </h1>
     </div>
     <div class="nav-right">
       <span id="user-info"></span>
@@ -24,33 +24,59 @@
     </div>
   </header>
 
+  <!-- 🗺️ Carte et sidebar côte à côte -->
   <div id="container">
     <div id="map"></div>
+
     <div id="sidebar">
+      <!-- 🔍 Barre de recherche -->
       <input type="text" id="searchBar" placeholder="Rechercher une friperie..." autocomplete="off" />
-      <ul id="friperieList"></ul>
 
-      <div id="avisContainer">
-        <h2 id="avisTitle" style="margin-bottom: 10px;">Avis</h2>
-        <div id="avisList"></div>
+      <!-- 🎯 Bouton pour afficher les filtres -->
+      <button id="filtrerBtn">🎯 Filtrer</button>
 
-        <!-- Formulaire visible seulement si connecté -->
-        <div id="avisForm" style="display: none; margin-top: 20px;">
-          <textarea id="avisTexte" placeholder="Écris ton avis ici..." rows="3"></textarea><br />
-          <button id="envoyerAvisBtn">Envoyer</button>
+      <!-- 🎛️ Filtres géographiques (masqués par défaut) -->
+      <div id="filters">
+        <button id="manual-locate-btn">Définir ma position manuellement</button>
+        <button id="locate-btn">📍 Ma position</button>
+
+        <div id="geoloc-filters">
+          <label for="radius-select">Rayon de recherche (km) :</label>
+          <select id="radius-select">
+            <option value="1">1 km</option>
+            <option value="5" selected>5 km</option>
+            <option value="10">10 km</option>
+            <option value="20">20 km</option>
+          </select>
+          <button id="applyFiltersBtn">Valider</button>
         </div>
       </div>
 
+      <!-- 📋 Liste des friperies -->
+      <ul id="friperieList"></ul>
     </div>
   </div>
 
+  <!-- 💬 Section des avis en bas -->
+  <div id="avisContainer">
+    <h2 id="avisTitle">Avis</h2>
+    <div id="avisList"></div>
+
+    <!-- ✍️ Formulaire d'avis (visible si connecté) -->
+    <div id="avisForm">
+      <textarea id="avisTexte" placeholder="Écris ton avis ici..." rows="3"></textarea><br />
+      <button id="envoyerAvisBtn">Envoyer</button>
+    </div>
+  </div>
+
+  <!-- 📜 Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="../js/friperies.js"></script>
   <script src="../js/carte.js"></script>
 
   <script>
     document.getElementById('loginBtn').addEventListener('click', () => {
-      window.location.href = 'auth.html'; // page de connexion
+      window.location.href = 'auth.html';
     });
   </script>
 </body>

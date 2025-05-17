@@ -103,7 +103,7 @@ function updateList(filteredFriperies) {
 }
 
 // === RECHERCHE ===
-function filterFriperies(query) {
+function filterFriperiesBySearch(query) {
   const filtre = query.toLowerCase();
   return friperies.filter(f =>
     f.nom.toLowerCase().includes(filtre) || f.description.toLowerCase().includes(filtre)
@@ -157,7 +157,7 @@ window.addEventListener('DOMContentLoaded', () => {
   updateList(friperies);
 
   document.getElementById('searchBar')?.addEventListener('input', (e) => {
-    const filtered = filterFriperies(e.target.value);
+    const filtered = filterFriperiesBySearch(e.target.value);
     addMarkers(filtered);
     updateList(filtered);
   });
@@ -172,12 +172,138 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+let userPosition = null;
+let userMarker = null;
+let radiusCircle = null;
+let filteredMarkers = [];
 
-if (connectedUser) {
-  loginBtn.style.display = 'none';
-  logoutBtn.style.display = 'inline-block';
-} else {
-  loginBtn.style.display = 'inline-block';
-  logoutBtn.style.display = 'none';
+// Calcul distance Haversine en km
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
 }
 
+// Filtrer les friperies dans le rayon choisi
+function filterFriperiesByRadius(radiusKm) {
+  if (!userPosition) return;
+
+  filteredMarkers.forEach(marker => map.removeLayer(marker));
+  filteredMarkers = [];
+
+  if (radiusCircle) {
+    map.removeLayer(radiusCircle);
+  }
+
+  radiusCircle = L.circle([userPosition.lat, userPosition.lng], {
+    radius: radiusKm * 1000,
+    color: '#a76aff',
+    fillColor: '#a76aff99',
+    fillOpacity: 0.3,
+  }).addTo(map);
+
+  // Liste des friperies dans le rayon
+  const friperiesDansRayon = friperies.filter(shop => {
+    const dist = getDistanceFromLatLonInKm(userPosition.lat, userPosition.lng, shop.latitude, shop.longitude);
+    return dist <= radiusKm;
+  });
+
+  // Ajouter les marqueurs filtrés
+  friperiesDansRayon.forEach(shop => {
+    const dist = getDistanceFromLatLonInKm(userPosition.lat, userPosition.lng, shop.latitude, shop.longitude);
+    const marker = L.marker([shop.latitude, shop.longitude], { icon: violetIcon }).addTo(map)
+      .bindPopup(`${shop.nom}<br>${dist.toFixed(2)} km`);
+    filteredMarkers.push(marker);
+  });
+
+  // Met à jour la liste à droite avec les friperies filtrées
+  addMarkers(friperiesDansRayon);
+  updateList(friperiesDansRayon);
+}
+
+// Bouton pour géolocaliser
+document.getElementById('locate-btn').addEventListener('click', () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      userPosition = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude
+      };
+
+      map.setView([userPosition.lat, userPosition.lng], 13);
+
+      if (userMarker) {
+        map.removeLayer(userMarker);
+      }
+
+      userMarker = L.marker([userPosition.lat, userPosition.lng], {
+        icon: L.icon({
+          iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+          iconSize: [30, 30],
+          iconAnchor: [15, 30],
+          popupAnchor: [0, -30]
+        })
+      }).addTo(map).bindPopup("Vous êtes ici").openPopup();
+
+    }, () => alert("Impossible de récupérer votre position."));
+  } else {
+    alert("La géolocalisation n'est pas supportée par ce navigateur.");
+  }
+});
+
+// Ouverture/fermeture du bloc filtres
+document.getElementById('filtrerBtn').addEventListener('click', () => {
+  const filters = document.getElementById('filters');
+  filters.style.display = filters.style.display === 'none' ? 'block' : 'none';
+});
+
+// Bouton "Valider" pour appliquer le filtre sur le rayon
+document.getElementById('applyFiltersBtn').addEventListener('click', () => {
+  if (!userPosition) {
+    alert("Cliquez d'abord sur 'Ma position' ou définissez votre position manuellement.");
+    return;
+  }
+  const radius = Number(document.getElementById('radius-select').value);
+  filterFriperiesByRadius(radius);
+});
+
+// Mode localisation manuelle
+let manualLocateActive = false;
+
+document.getElementById('manual-locate-btn').addEventListener('click', () => {
+  manualLocateActive = !manualLocateActive;
+  alert(manualLocateActive 
+    ? "Cliquez sur la carte pour définir votre position." 
+    : "Mode de localisation manuelle désactivé.");
+});
+
+map.on('click', function (e) {
+  if (!manualLocateActive) return;
+
+  userPosition = {
+    lat: e.latlng.lat,
+    lng: e.latlng.lng
+  };
+
+  map.setView([userPosition.lat, userPosition.lng], 13);
+
+  if (userMarker) {
+    map.removeLayer(userMarker);
+  }
+
+  userMarker = L.marker([userPosition.lat, userPosition.lng], {
+    icon: L.icon({
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+      iconSize: [30, 30],
+      iconAnchor: [15, 30],
+      popupAnchor: [0, -30]
+    })
+  }).addTo(map).bindPopup("Position définie manuellement").openPopup();
+
+  manualLocateActive = false; // désactive mode après clic
+});

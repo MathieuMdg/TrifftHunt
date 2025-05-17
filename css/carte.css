@@ -32,7 +32,7 @@ body {
 }
 
 #navbar h1 {
-  color: #8e44ad;
+  color: #9f4ec2;
   font-size: 22px;
   margin: 0;
   letter-spacing: 1px;
@@ -46,7 +46,7 @@ body {
 
 #loginBtn, #logoutBtn {
   padding: 8px 16px;
-  background-color: #8e44ad;
+  background-color: #9a49bd;
   color: white;
   border: none;
   border-radius: 6px;
@@ -58,7 +58,7 @@ body {
 }
 
 #loginBtn:hover, #logoutBtn:hover {
-  background-color: #732d91;
+  background-color: #8635a8;
 }
 
 #user-info {
@@ -99,7 +99,7 @@ body {
   border-radius: 8px;
   border: 1px solid #ccc;
   margin-bottom: 20px;
-  outline-color: #8e44ad;
+  outline-color: #a24ec5;
 }
 
 /* ===== LISTE ===== */
@@ -165,7 +165,7 @@ body {
   margin-top: 12px;
   width: 100%;
   padding: 12px;
-  background-color: #8e44ad;
+  background-color: #9d4cc0;
   color: white;
   border: none;
   border-radius: 8px;
@@ -207,7 +207,7 @@ body {
 #avisForm button {
   margin-top: 12px;
   padding: 12px 18px;
-  background-color: #8e44ad;
+  background-color: #9d4bc0;
   color: white;
   border: none;
   border-radius: 8px;

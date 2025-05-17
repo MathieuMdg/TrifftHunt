@@ -2,32 +2,173 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Connexion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TriftHunt – Accueil</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
 
-  <link rel="stylesheet" href="../css/style.css" />
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #ede6f7, #f9e6f8);
+      color: #4a2a6a; /* violet foncé doux */
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    header {
+      width: 100%;
+      padding: 1.5rem 0;
+      background: #8b6ec1; /* violet moyen */
+      text-align: center;
+      user-select: none;
+      box-shadow: 0 4px 15px rgba(139, 110, 193, 0.6);
+      margin-bottom: 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+
+    .site-title {
+      font-family: 'Segoe UI Black', 'Arial Black', Arial, sans-serif;
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: #f9d4e6; /* rose clair */
+      letter-spacing: 0.15em;
+      margin: 0;
+      cursor: default;
+      text-shadow:
+        0 0 8px #d5a9cb,
+        0 0 20px #b57eb6;
+    }
+
+    main {
+      max-width: 600px;
+      background-color: #faf5fc;
+      border-radius: 1rem;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 12px 24px rgba(139, 110, 193, 0.3);
+      margin-top: 100px;
+      text-align: center;
+      color: #4a2a6a;
+    }
+
+    main h1 {
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #6a47a6; /* violet plus prononcé */
+    }
+
+    main p {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      color: #7b5fa0; /* violet doux */
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.85rem 2.5rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 0.8rem;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(139, 110, 193, 0.3);
+      border: none;
+      text-decoration: none;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+      min-width: 140px;
+      color: white;
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, #9a7ed2, #cda4e7);
+      box-shadow: 0 6px 18px #b692e1cc;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(45deg, #b59ce7, #dec9f5);
+      box-shadow: 0 8px 24px #dec9f599;
+      color: #4a2a6a;
+    }
+
+    .btn-secondary {
+      background: linear-gradient(45deg, #f4c0d8, #f9d7e4);
+      color: #6a3a66;
+      box-shadow: 0 6px 16px #f9bad8cc;
+    }
+
+    .btn-secondary:hover {
+      background: linear-gradient(45deg, #f7a7cb, #fbc7de);
+      box-shadow: 0 8px 24px #fbb0d6cc;
+      color: #4a2a6a;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 1rem 0;
+      color: #8b6ec1;
+      font-size: 0.9rem;
+      user-select: none;
+      text-align: center;
+    }
+
+    @media (max-width: 480px) {
+      main {
+        margin: 100px 1rem 2rem;
+        padding: 2rem 1.5rem;
+      }
+
+      main h1 {
+        font-size: 2rem;
+      }
+
+      .btn-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .btn {
+        min-width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-  <form id="loginForm">
-    <h2>Connexion</h2>
-    <input type="text" id="username" placeholder="Nom d’utilisateur" required />
-    <input type="password" id="password" placeholder="Mot de passe" required />
-    <button type="submit">Se connecter</button>
-    <div class="error" id="errorMsg"></div>
-  </form>
 
-  <script>
-    const form = document.getElementById('loginForm');
-    const errorMsg = document.getElementById('errorMsg');
+<header>
+  <h1 class="site-title">TriftHunt</h1>
+</header>
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
+<main>
+  <h1>Bienvenue sur TriftHunt</h1>
+  <p>Explorez les friperies vintage et trouvez les meilleurs bons plans près de chez vous grâce à notre carte interactive.</p>
+  <p>Inscrivez-vous pour participer à la communauté, ou explorez librement sans connexion.</p>
 
-  
-        window.location.href = 'carte.html';
+  <div class="btn-container">
+    <a href="auth.html" class="btn btn-primary" aria-label="Se connecter ou s'inscrire à TriftHunt">Se connecter / S'inscrire</a>
+    <a href="carte.html" class="btn btn-secondary" aria-label="Accéder directement à la carte sans connexion">Explorer la carte</a>
+  </div>
+</main>
 
-    });
-  </script>
+<footer>
+  &copy; 2025 TriftHunt
+</footer>
+
 </body>
 </html>

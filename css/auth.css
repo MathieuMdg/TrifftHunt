@@ -1,0 +1,160 @@
+/* Inclure box-sizing global */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #fffefe, #e9d9f5);
+  color: #e0d7f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  background-color: #3b0a59;
+  padding: 3rem 2.5rem;
+  border-radius: 1.2rem;
+  box-shadow: 0 8px 24px rgba(107, 36, 134, 0.7);
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto; /* Centrer horizontalement */
+  transition: transform 0.3s ease;
+}
+
+.container:hover {
+  transform: translateY(-5px);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  font-size: 2rem;
+  color: #cfa3ff;
+  text-shadow: 0 0 10px #cfa3ffcc;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #d4bef8;
+}
+
+input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 0.6rem;
+  border: none;
+  background-color: #4e2a75;
+  color: #e9e3ff;
+  font-size: 1rem;
+  box-shadow: inset 0 0 8px #2a1640cc;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box; /* IMPORTANT */
+}
+
+input::placeholder {
+  color: #bdaaff;
+}
+
+input:focus {
+  outline: none;
+  background-color: #6a46a7;
+  box-shadow: 0 0 12px #cfa3ff;
+}
+
+button {
+  width: 100%;
+  padding: 0.85rem;
+  background: #a76aff;
+  border: none;
+  border-radius: 0.8rem;
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 6px 16px #a76aff80;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+  background-color: #bf94ff;
+  box-shadow: 0 8px 24px #bf94ff99;
+}
+
+.toggle {
+  text-align: center;
+  margin-top: 1.8rem;
+  font-size: 0.95rem;
+  color: #cfc3ff;
+}
+
+.toggle a {
+  color: #a76aff;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.toggle a:hover {
+  color: #d1b3ff;
+  text-decoration: underline;
+}
+
+#username-group {
+  display: none;
+}
+
+
+header {
+  width: 100%;
+  padding: 1.5rem 0;
+  /* box-shadow supprimé pour enlever le trait */
+  margin: 0;
+  text-align: center;
+  user-select: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+
+.site-title {
+  font-family: 'Segoe UI Black', 'Arial Black', Arial, sans-serif;
+  font-size: 2.4rem; /* un peu plus petit pour ne pas écraser */
+  font-weight: 900;
+  color: #d8bfff;
+  letter-spacing: 0.15em;
+
+  margin: 0;
+  cursor: default;
+  transition: color 0.3s ease;
+  padding: 0 1rem; /* évite débordement */
+}
+
+.site-title:hover {
+  color: #e0c1ff;
+  text-shadow:
+    0 0 12px #c3a9ff,
+    0 0 30px #9f7fff,
+    0 0 45px #8a6de3,
+    0 0 60px #6a33d8;
+}
+
+/* Décale un peu la page pour que le contenu ne soit pas caché sous le header fixe */
+body {
+  padding-top: 80px; /* hauteur approximative du header */
+}

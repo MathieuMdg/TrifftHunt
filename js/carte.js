@@ -52,7 +52,7 @@ function addMarkers(filteredFriperies) {
       <div class="popup" style="max-width: 250px;">
         <strong>${f.nom}</strong><br />
         <small style="color: gray;">${f.adresse || ''}</small><br />
-        <img src="${f.image}" alt="${f.nom}" style="width: 100%; height: auto; margin: 8px 0; border-radius: 6px;" /><br />
+        <img src="${f.image}" alt="${f.nom}" style="width: 100%; max-height: 150px; object-fit: cover; border-radius: 6px; margin: 8px 0;" /><br />
         <em>${f.description}</em>
       </div>
     `);
@@ -84,7 +84,7 @@ function updateList(filteredFriperies) {
     const li = document.createElement('li');
     li.innerHTML = `
       <div style="display:flex; align-items:center; gap:10px;">
-        <img src="${f.image}" alt="${f.nom}" style="width:60px; height:auto; border-radius:6px; flex-shrink:0;" />
+        <img src="${f.image}" alt="${f.nom}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; flex-shrink: 0;" />
         <div>
           <strong>${f.nom}</strong><br />
           <small style="color:gray;">${f.adresse || ''}</small><br />
@@ -322,4 +322,13 @@ function resetRadiusFilter() {
   friperiesDansRayon = null;
   addMarkers(friperies);
   updateList(friperies);
+}
+
+
+
+function afficherEtoiles(note) {
+  const pleine = "★";
+  const vide = "☆";
+  const arrondi = Math.round(note);
+  return pleine.repeat(arrondi) + vide.repeat(5 - arrondi);
 }

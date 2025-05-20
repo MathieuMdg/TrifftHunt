@@ -16,6 +16,7 @@ const violetIcon = L.icon({
 
 let markers = [];
 let friperieActive = null;
+let friperiesDansRayon = null
 
 // === GESTION UTILISATEUR ET SESSION ===
 function mettreAJourInterfaceUtilisateur() {
@@ -105,7 +106,8 @@ function updateList(filteredFriperies) {
 // === RECHERCHE ===
 function filterFriperiesBySearch(query) {
   const filtre = query.toLowerCase();
-  return friperies.filter(f =>
+  const baseList = friperiesDansRayon || friperies;
+  return baseList.filter(f =>
     f.nom.toLowerCase().includes(filtre) || f.description.toLowerCase().includes(filtre)
   );
 }
@@ -208,7 +210,7 @@ function filterFriperiesByRadius(radiusKm) {
   }).addTo(map);
 
   // Liste des friperies dans le rayon
-  const friperiesDansRayon = friperies.filter(shop => {
+  friperiesDansRayon = friperies.filter(shop => {
     const dist = getDistanceFromLatLonInKm(userPosition.lat, userPosition.lng, shop.latitude, shop.longitude);
     return dist <= radiusKm;
   });
@@ -307,3 +309,17 @@ map.on('click', function (e) {
 
   manualLocateActive = false; // désactive mode après clic
 });
+
+
+document.getElementById('resetRadiusBtn').addEventListener('click', resetRadiusFilter);
+
+function resetRadiusFilter() {
+  if (radiusCircle) map.removeLayer(radiusCircle);
+  if (filteredMarkers.length) {
+    filteredMarkers.forEach(m => map.removeLayer(m));
+    filteredMarkers = [];
+  }
+  friperiesDansRayon = null;
+  addMarkers(friperies);
+  updateList(friperies);
+}

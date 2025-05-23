@@ -260,3 +260,26 @@ html, body {
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
+
+
+.notification {
+  position: fixed;
+  bottom: 20px;         /* En bas de l'écran */
+  left: 20px;           /* Alignée à gauche */
+  background-color: #ca00ca;
+  color: white;
+  padding: 16px 24px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(10px);
+}
+
+.notification.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}

@@ -332,3 +332,71 @@ function afficherEtoiles(note) {
   const arrondi = Math.round(note);
   return pleine.repeat(arrondi) + vide.repeat(5 - arrondi);
 }
+
+
+// Pour afficher un message lorsque de nouvelles friperies sont ajoutées
+  function afficherNotification(message) {
+  const notif = document.querySelector('.notification');
+  notif.textContent = message;
+  notif.classList.add('show');
+
+  setTimeout(() => {
+    notif.classList.remove('show');
+  }, 10000); // disparaît après 4 secondes
+}
+
+
+  // Pour ajouter une nouvelle friperie
+  function ajouterFriperie(nouvelleFriperie) {
+  // Ajouter à la liste principale
+  friperies.push(nouvelleFriperie);
+
+  // Ajouter le marqueur à la carte
+  const marker = L.marker([nouvelleFriperie.latitude, nouvelleFriperie.longitude]).addTo(map);
+  marker.bindPopup(`
+    <strong>${nouvelleFriperie.nom}</strong><br>
+    ${nouvelleFriperie.adresse || ''}<br>
+    <img src="${nouvelleFriperie.image}" alt="${nouvelleFriperie.nom}" style="width: 100px;"><br>
+    ${nouvelleFriperie.description}<br>
+    Note : ${nouvelleFriperie.note || 'Non notée'} ⭐
+  `);
+
+  // Afficher la notification
+  afficherNotification(`Nouvelle friperie ajoutée : ${nouvelleFriperie.nom}`);
+}
+
+
+setTimeout(() => {
+    ajouterFriperie({
+      nom: "The King of Frip",
+      latitude: 48.865,
+      longitude: 2.357,
+      image: "../images/KingOfFrip.jpg",
+      adresse: "33 Rue du Roi de Sicile, 75004 Paris",
+      description: "Une petite friperie éthique et chic en plein centre de Paris.",
+      note: 4.5
+    });
+    addMarkers(friperies);
+    updateList(friperies);
+  }, 10000); // apparait après 10 secondes
+
+
+function supprimerAvisFriperie(nomFriperie) {
+  // Récupérer les avis depuis le localStorage
+  const avisJSON = localStorage.getItem("avisFriperies");
+
+  if (!avisJSON) return;
+
+  const avis = JSON.parse(avisJSON);
+
+  // Supprimer l'entrée de la friperie souhaitée
+  if (avis[nomFriperie]) {
+    delete avis[nomFriperie];
+
+    // Réenregistrer l'objet modifié dans le localStorage
+    localStorage.setItem("avisFriperies", JSON.stringify(avis));
+  }
+}
+
+// Appel de la fonction pour "The King of Frip"
+supprimerAvisFriperie("The King of Frip");
